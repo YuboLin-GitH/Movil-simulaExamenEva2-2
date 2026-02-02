@@ -1,19 +1,15 @@
 package com.example.gestfut_compose.ui.components
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.gestfut_compose.R
+import com.example.gestfut_compose.ui.theme.ColorAccent // Asegúrate de tener este color o usa otro
 import com.example.gestfut_compose.ui.theme.ColorPrimary
-
 
 // Enum para representar las pantallas
 enum class BottomNavItem(val icon: Int, val title: String) {
@@ -23,20 +19,25 @@ enum class BottomNavItem(val icon: Int, val title: String) {
 
 @Composable
 fun mibottombar(
-    selectedItem: BottomNavItem,
-    onItemSelected: (BottomNavItem) -> Unit
+    selectedItem: BottomNavItem,      // ¿Qué botón está activo?
+    onItemSelected: (BottomNavItem) -> Unit // ¿Qué hago cuando pulsan?
 ) {
     NavigationBar(
-        containerColor = ColorPrimary, // fondo como colorPrimary
+        containerColor = ColorAccent,
         tonalElevation = 0.dp
     ) {
+        // Recorremos los elementos del ENUM
         BottomNavItem.values().forEach { item ->
             NavigationBarItem(
                 selected = item == selectedItem,
                 onClick = { onItemSelected(item) },
-                icon = { Icon(painter = painterResource(id = item.icon), contentDescription = item.title) },
-                label = { Text(text = item.title) },
-
+                icon = {
+                    Icon(
+                        painter = painterResource(id = item.icon),
+                        contentDescription = item.title
+                    )
+                },
+                label = { Text(text = item.title) }
             )
         }
     }

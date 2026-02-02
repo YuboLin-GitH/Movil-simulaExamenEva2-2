@@ -26,9 +26,12 @@ import com.example.gestfut.data.Partido
 import com.example.gestfut_compose.R
 import com.example.gestfut_compose.ui.theme.ColorAccent
 import com.example.gestfut_compose.ui.theme.ColorPrimaryDark
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 
-    @Composable
+@Composable
     fun partidoItem(partido: Partido) {
         Card(
             modifier = Modifier
@@ -112,9 +115,13 @@ import com.example.gestfut_compose.ui.theme.ColorPrimaryDark
 
                 Spacer(modifier = Modifier.height(4.dp))
 
+
+
+                val fecharformato = SimpleDateFormat("dd/MM/yyyy-HH:mm", Locale.getDefault())
+                val objetoDate= fecharformato.format(Date(partido.fecha * 1000) )
                 // Fecha del partido
                 Text(
-                    text = partido.fecha.toString(),
+                    text = objetoDate.toString(),
                     fontSize = 10.sp,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
