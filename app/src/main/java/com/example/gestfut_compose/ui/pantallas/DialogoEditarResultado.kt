@@ -1,4 +1,4 @@
-package com.example.gestfut_compose.ui.components
+package com.example.gestfut_compose.ui.pantallas
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

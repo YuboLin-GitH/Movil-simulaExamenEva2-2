@@ -1,0 +1,50 @@
+公式二：万能弹窗模板 (Dialog)
+不管要改几个字段，结构都是一样的：AlertDialog + Column + TextField。
+
+文件位置：ui/components/TuDialogo.kt
+
+@Composable
+fun TuDialogo(
+    item: TuObjeto, // [改] 数据类
+    onDismiss: () -> Unit,
+    onConfirm: (String, Int) -> Unit // [改] 参数类型要对应
+) {
+    // --- 【套路 1】临时状态：用来存输入框里的字 ---
+    // [改] 如果是 Int 要转 String 显示，保存时再转回去
+    var texto1 by remember { mutableStateOf(item.nombre) }
+    var texto2 by remember { mutableStateOf(item.edad.toString()) }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("编辑内容") }, // [改] 标题
+        text = {
+            Column {
+                // --- 【套路 2】输入框 ---
+                TextField(
+                    value = texto1,
+                    onValueChange = { texto1 = it },
+                    label = { Text("名字") } // [改]
+                )
+
+                // 如果有第二个输入框
+                TextField(
+                    value = texto2,
+                    onValueChange = { texto2 = it },
+                    label = { Text("年龄") } // [改]
+                )
+            }
+        },
+        confirmButton = {
+            Button(onClick = {
+                // --- 【套路 3】保存前转换类型 ---
+                val val2 = texto2.toIntOrNull() ?: 0 // [改] 如果需要数字
+                onConfirm(texto1, val2)
+            }) {
+                Text("保存")
+            }
+        },
+        dismissButton = {
+            Button(onClick = onDismiss) { Text("取消") }
+        }
+    )
+}

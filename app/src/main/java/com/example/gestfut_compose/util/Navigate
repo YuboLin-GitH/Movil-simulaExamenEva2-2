@@ -1,0 +1,17 @@
+公式三：详情页跳转模板 (Navigate)
+如果考到“点击跳转到详情页”，NavHost 里加这一段。
+
+// 1. 在 Ruta.kt 定义好: @Serializable data class Detalle(val id: String)
+
+composable<Detalle> { backStackEntry ->
+    // --- 【套路 1】获取参数 ---
+    val args = backStackEntry.toRoute<Detalle>()
+
+    // --- 【套路 2】显示详情页 ---
+    PantallaDetalle(
+        id = args.id, // 把参数传过去
+        onBack = { navController.popBackStack() } // 返回键通用写法
+    )
+}
+
+

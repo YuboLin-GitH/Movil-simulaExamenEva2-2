@@ -26,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.gestfut_compose.data.Partido
-import com.example.gestfut_compose.ui.components.DialogoEditarResultado
 import com.example.gestfut_compose.ui.components.partidoItem
 import com.example.gestfut_compose.ui.theme.ColorAccent
 

@@ -60,7 +60,8 @@ fun NavHost() {
 
                 pantallaCalendario(
                     modificador= Modifier,
-                    jornadas = jornadas, selectedJornada = jornada_sel,
+                    jornadas = jornadas,
+                    selectedJornada = jornada_sel,
                     {valor_spinner->jornada_sel=valor_spinner},
                     // 4. 传完整列表 (用 .toList() 确保每次 trigger 变化时都视为新列表)
                     partidos = PartidoProveedor.partidos.toList(),

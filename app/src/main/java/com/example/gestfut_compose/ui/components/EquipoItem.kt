@@ -58,3 +58,30 @@ fun equipoItem(equipo: Equipo, posicion: Int, onClick: () -> Unit) {
     }
 }
 
+
+@Preview
+@Composable
+fun equipo_item_preview()
+{
+    val equipoPrueba = Equipo(
+        nombre = "Real Madrid",
+        pg = 10,
+        pp = 2,
+        PE = 5,
+        escudo = "real_madrid",      // 这些字段虽然列表里不显示，但创建对象时必须填
+        presidente = "Florentino",
+        año_fundacion = 1902,
+        puntos = 35,
+        ligas_ganadas = 35,
+        estadio = "Santiago Bernabéu",
+        imagen_estadio = "https://..."
+    )
+
+    // 2. 调用你的组件
+    equipoItem(
+        equipo = equipoPrueba,
+        posicion = 1,        // 假装它是第 1 名
+        onClick = {}         // 点击事件给个空的 lambda 就行
+    )
+}
+

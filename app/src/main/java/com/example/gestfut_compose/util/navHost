@@ -1,0 +1,66 @@
+公式一：万能 NavHost 模板 (背这个！)
+这个模板解决了三个最头疼的问题：显示列表、点击弹窗、数据刷新。
+
+
+// [改] 引入你的数据类和Provider
+import com.example.tuapp.data.TuObjeto
+import com.example.tuapp.data.TuProvider
+
+composable<TuRutaLista> { // [改] 你的路由名字，比如 Calendario
+
+    // --- 【套路 1】刷新钥匙：用来强制更新列表 ---
+    var refreshKey by remember { mutableStateOf(0) }
+
+    // --- 【套路 2】数据源：配合 key 使用，key 变了数据就重读 ---
+    val listaDatos = remember(refreshKey) {
+        // [改] 这里换成你的数据源，一定要加 .toList()
+        TuProvider.datos.toList()
+    }
+
+    // --- 【套路 3】弹窗开关：存“当前被点的对象”，为空就不显示 ---
+    var itemEditar by remember { mutableStateOf<TuObjeto?>(null) } // [改] 类名
+
+    // --- 显示主界面 ---
+    TuPantalla( // [改] 你的屏幕组件，比如 pantallaCalendario
+        lista = listaDatos,
+        // 点击列表项时，把对象存进开关，弹窗自动出现
+        onItemClick = { item -> itemEditar = item }
+    )
+
+    // --- 【套路 4】弹窗逻辑 ---
+    if (itemEditar != null) {
+        TuDialogo( // [改] 你的弹窗组件名
+            item = itemEditar!!,
+            onDismiss = { itemEditar = null }, // 关弹窗
+            onConfirm = { nuevoValor1, nuevoValor2 -> // [改]根据需要传几个参数
+
+                // --- 【套路 5】修改数据 (偷梁换柱法) ---
+                // 1. 找到位置
+                val index = TuProvider.datos.indexOf(itemEditar!!)
+                if (index != -1) {
+                    // 2. 复制新对象 (关键!)
+                    val nuevoItem = itemEditar!!.copy(
+                        campo1 = nuevoValor1, // [改] 修改对应的属性
+                        campo2 = nuevoValor2
+                    )
+                    // 3. 替换旧对象
+                    TuProvider.datos[index] = nuevoItem
+
+                    // 4. 触发刷新
+                    refreshKey++
+                }
+
+                // 5. 关弹窗
+                itemEditar = null
+            }
+        )
+    }
+}
+
+先把 NavHost 的架子搭起来：把公式一抄进去。
+
+看到红色报错（类名不对）：鼠标放上去，把 TuObjeto 改成 Partido 或 Alumno。
+
+看到红色报错（属性不对）：把 campo1 改成 goles_local 或 nota。
+
+运行：只要这套逻辑通了，你至少拿 80% 的分。
