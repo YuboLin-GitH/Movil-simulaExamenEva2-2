@@ -31,7 +31,6 @@ fun equipoItem(equipo: Equipo){
         Row(modifier = Modifier.fillMaxWidth().padding(4.dp)) {
             Column {
 
-                Image(painter = painterResource(R.drawable), contentDescription = "")
             }
 
         }

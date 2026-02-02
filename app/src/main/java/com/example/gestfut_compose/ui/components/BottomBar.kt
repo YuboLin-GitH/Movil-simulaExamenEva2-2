@@ -1,43 +1,85 @@
 package com.example.gestfut_compose.ui.components
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.MailOutline
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.ejemplonavegacioncompose.navegacion.Calendario
+import com.example.ejemplonavegacioncompose.navegacion.Clasificacion
+import com.example.ejemplonavegacioncompose.ui.componentes.BottomItem
 import com.example.gestfut_compose.R
 import com.example.gestfut_compose.ui.theme.ColorAccent // Asegúrate de tener este color o usa otro
 import com.example.gestfut_compose.ui.theme.ColorPrimary
 
-// Enum para representar las pantallas
-enum class BottomNavItem(val icon: Int, val title: String) {
-    Calendario(R.drawable.baseline_calendar_today_24, "CALENDARIO"),
-    Clasificacion(R.drawable.baseline_format_list_numbered_24, "CLASIFICACION")
-}
 
 @Composable
-fun mibottombar(
-    selectedItem: BottomNavItem,      // ¿Qué botón está activo?
-    onItemSelected: (BottomNavItem) -> Unit // ¿Qué hago cuando pulsan?
-) {
-    NavigationBar(
-        containerColor = ColorAccent,
-        tonalElevation = 0.dp
-    ) {
-        // Recorremos los elementos del ENUM
-        BottomNavItem.values().forEach { item ->
+fun BottomBar(navController: NavHostController) {
+    val items = listOf(BottomItem(
+        Calendario, "Calendario",
+        Icons.Default.Home
+    ),
+        BottomItem(
+            Clasificacion, "Clasificacion",
+            Icons.Default.FavoriteBorder
+        ))
+    //Esta función recoge de la pila la pantalla actual
+    val entradaActual by navController.currentBackStackEntryAsState()
+    //Recogemos como string la ruta
+    val ruta_actual = entradaActual?.destination?.route
+    NavigationBar {
+        items.forEach { item ->
             NavigationBarItem(
-                selected = item == selectedItem,
-                onClick = { onItemSelected(item) },
-                icon = {
-                    Icon(
-                        painter = painterResource(id = item.icon),
-                        contentDescription = item.title
-                    )
-                },
-                label = { Text(text = item.title) }
+                icon = { Icon(item.icono, null) },
+                label = { Text(item.etiqueta) },
+                //Si la ruta actual es igual a la ruta de la etiqueta el icono esta seleccionado
+                selected = ruta_actual == item.ruta::class.qualifiedName,
+                onClick = {
+
+                    navController.navigate(item.ruta){
+                        /* popUpTo sirve para eliminar destinos del back stack hasta cierto punto.
+                     navController.graph.startDestinationId es el ID de la pantalla inicial del NavHost.
+
+                     En conjunto, esto asegura que si ya estás en otra pantalla y
+                      navegas a la nueva, no se acumulen demasiadas instancias en el back stack.
+                      */
+                        popUpTo(navController.graph.startDestinationId) {
+                            /*
+                            Guarda el estado de la pantalla que se está removiendo del back stack
+                            (por ejemplo, scroll, datos, formulario).
+                    Cuando vuelvas a esa pantalla, el estado se restaurará automáticamente.
+                             */
+                            saveState = true
+
+                        }
+
+                        /*
+                        Evita que se creen múltiples copias de la misma pantalla en el stack.
+Por ejemplo, si ya estás en "home" y vuelves a navegar a "home",
+no se apilará otra instancia; solo se reutiliza la existente.
+                         */
+                        launchSingleTop = true
+                        /*
+                        Si previamente esa pantalla fue guardada con saveState, se restaurará su estado automáticamente.
+
+Esto es útil en BottomNavigation, donde al cambiar de pestaña quieres que la pantalla recuerde su scroll,
+inputs o posición, en lugar de resetearse.
+                         */
+                        restoreState = true
+
+                    }
+                }
             )
         }
     }
