@@ -1,4 +1,4 @@
-package com.example.ejemplonavegacioncompose.navegacion
+package com.example.gestfut_compose.navegacion
 
 import kotlinx.serialization.Serializable
 
@@ -12,3 +12,5 @@ object Calendario
 @Serializable
 object Clasificacion
 
+@Serializable
+data class DetalleEquipo(val nombre: String)

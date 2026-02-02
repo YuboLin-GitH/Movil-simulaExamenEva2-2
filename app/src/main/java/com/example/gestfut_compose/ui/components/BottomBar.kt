@@ -1,38 +1,30 @@
 package com.example.gestfut_compose.ui.components
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.MailOutline
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.DateRange
+
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.ejemplonavegacioncompose.navegacion.Calendario
-import com.example.ejemplonavegacioncompose.navegacion.Clasificacion
-import com.example.ejemplonavegacioncompose.ui.componentes.BottomItem
-import com.example.gestfut_compose.R
-import com.example.gestfut_compose.ui.theme.ColorAccent // Asegúrate de tener este color o usa otro
-import com.example.gestfut_compose.ui.theme.ColorPrimary
+import com.example.gestfut_compose.navegacion.Calendario
+import com.example.gestfut_compose.navegacion.Clasificacion
 
 
 @Composable
 fun BottomBar(navController: NavHostController) {
     val items = listOf(BottomItem(
         Calendario, "Calendario",
-        Icons.Default.Home
+        Icons.Default.DateRange
     ),
         BottomItem(
             Clasificacion, "Clasificacion",
-            Icons.Default.FavoriteBorder
+            Icons.Default.AccountBox
         ))
     //Esta función recoge de la pila la pantalla actual
     val entradaActual by navController.currentBackStackEntryAsState()

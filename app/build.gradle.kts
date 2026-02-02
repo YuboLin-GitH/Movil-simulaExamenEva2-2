@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     kotlin("plugin.serialization") version "2.0.21"
+
 }
 
 android {
@@ -42,7 +43,7 @@ android {
 
 dependencies {
     val nav_version = "2.9.6"
-
+    implementation("io.coil-kt:coil-compose:2.4.0")
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
     implementation(libs.androidx.core.ktx)

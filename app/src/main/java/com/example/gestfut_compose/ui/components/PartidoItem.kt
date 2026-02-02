@@ -1,5 +1,6 @@
 package com.example.gestfut_compose.ui.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,7 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.gestfut.data.Partido
+import com.example.gestfut_compose.data.Partido
 import com.example.gestfut_compose.R
 import com.example.gestfut_compose.ui.theme.ColorAccent
 import com.example.gestfut_compose.ui.theme.ColorPrimaryDark
@@ -31,12 +32,39 @@ import java.util.Date
 import java.util.Locale
 
 
+
+
+@SuppressLint("DiscouragedApi")
 @Composable
-    fun partidoItem(partido: Partido) {
+fun getEscudoResource(nombreEquipo: String): Int {
+    val context = androidx.compose.ui.platform.LocalContext.current
+
+    // 1. 处理名字：把 "Real Madrid" 变成 "real_madrid"
+    // 这一点很重要，因为 drawable 资源文件名只能包含小写字母、数字和下划线
+    val nombreNormalizado = nombreEquipo.lowercase().replace(" ", "_")
+    // 如果有特殊字符（如 á, ñ 等），通常最好在后端数据里处理好，
+    // 但考试里简单的做法就是转小写和替换空格。
+
+    // 2. 查找资源 ID
+    // getIdentifier(资源名, 资源类型, 包名)
+    val id = context.resources.getIdentifier(
+        nombreNormalizado,
+        "drawable",
+        context.packageName
+    )
+
+    // 3. 如果找到了(id != 0)就返回 id，找不到就返回默认图标
+    return if (id != 0) id else R.drawable.ic_soccer
+}
+
+
+@Composable
+    fun partidoItem(partido: Partido, onClick: () -> Unit) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp, vertical = 8.dp),
+            onClick =  onClick,
             colors = CardDefaults.cardColors(containerColor = ColorAccent),
             elevation = CardDefaults.cardElevation(8.dp)
         ) {
@@ -49,10 +77,10 @@ import java.util.Locale
                 ) {
                     // Logo local
                     Image(
-                        painter = painterResource(R.drawable.ic_soccer),
+                        painter = painterResource(id = getEscudoResource(partido.equipo_local)),
                         contentDescription = "Logo Local",
                         modifier = Modifier.size(40.dp),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Fit // 建议改成 Fit，防止图片变形
                     )
 
                     Spacer(modifier = Modifier.width(16.dp))
@@ -89,10 +117,11 @@ import java.util.Locale
 
                     // Logo visitante
                     Image(
-                        painter = painterResource(R.drawable.ic_soccer),
+                        // 传入客队名字
+                        painter = painterResource(id = getEscudoResource(partido.equipo_visitante)),
                         contentDescription = "Logo Visitante",
                         modifier = Modifier.size(40.dp),
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Fit
                     )
                 }
 
@@ -140,5 +169,5 @@ import java.util.Locale
 @Composable
 fun partido_item_preview()
 {
-    partidoItem(Partido("FCBarcelona","RMadrid",0,1,3,1))
+    partidoItem(Partido("FCBarcelona","RMadrid",0,1,3,1),{})
 }

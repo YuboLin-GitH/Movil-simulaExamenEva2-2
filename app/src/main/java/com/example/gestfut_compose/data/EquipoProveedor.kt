@@ -1,7 +1,6 @@
-package com.example.gestfut.data
+package com.example.gestfut_compose.data
 
 import android.content.Context
-import android.util.Log
 import kotlinx.serialization.json.Json
 
 class EquipoProveedor {

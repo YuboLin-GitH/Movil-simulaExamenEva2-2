@@ -16,7 +16,6 @@ import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,21 +23,32 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.gestfut.data.Partido
+import com.example.gestfut_compose.data.Partido
+import com.example.gestfut_compose.ui.components.DialogoEditarResultado
 import com.example.gestfut_compose.ui.components.partidoItem
 import com.example.gestfut_compose.ui.theme.ColorAccent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun pantallaCalendario(modificador: Modifier=Modifier, jornadas: List<String>,
+fun pantallaCalendario(modificador: Modifier=Modifier,
+                       jornadas: List<String>,
                        selectedJornada: String,
                        onJornadaSelected: (String) -> Unit,
-                       partidos: List<Partido>)
-{
+                       partidos: List<Partido>,
+                       onUpdatePartido: (String, String, Int, Int) -> Unit
+) {
+
+    // 状态：当前正在编辑的比赛（如果是 null 就不显示弹窗）
+    var partidoAEditar by remember { mutableStateOf<Partido?>(null) }
+
+    // 逻辑：根据传入的 selectedJornada 自动筛选
+    val partidosFiltrados = remember(partidos, selectedJornada) {
+        if (selectedJornada == "0") partidos
+        else partidos.filter { it.jornada.toString() == selectedJornada }
+    }
+
     Column(
         modifier = modificador
             .fillMaxSize()
@@ -100,10 +110,33 @@ fun pantallaCalendario(modificador: Modifier=Modifier, jornadas: List<String>,
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-            items(partidos) { partido ->
-                partidoItem(partido)
+            items(partidosFiltrados) { partido ->
+                partidoItem(partido = partido, onClick = { partidoAEditar = partido })
             }
         }
+
+        if (partidoAEditar != null) {
+            DialogoEditarResultado(
+                partido = partidoAEditar!!,
+                onDismiss = { partidoAEditar = null },
+                onConfirm = { nuevoLocalStr, nuevoVisitanteStr ->
+                    // 简单的输入转换：字符串转数字，失败则默认为0
+                    val gLocal = nuevoLocalStr.toIntOrNull() ?: 0
+                    val gVisitante = nuevoVisitanteStr.toIntOrNull() ?: 0
+
+                    // 调用父级传下来的更新函数
+                    onUpdatePartido(
+                        partidoAEditar!!.equipo_local,
+                        partidoAEditar!!.equipo_visitante,
+                        gLocal,
+                        gVisitante
+                    )
+                    // 关闭弹窗
+                    partidoAEditar = null
+                }
+            )
+        }
+
     }
 }
 

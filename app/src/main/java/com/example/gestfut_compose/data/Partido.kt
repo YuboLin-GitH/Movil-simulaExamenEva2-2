@@ -1,4 +1,4 @@
-package com.example.gestfut.data
+package com.example.gestfut_compose.data
 
 import kotlinx.serialization.Serializable
 

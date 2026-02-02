@@ -1,4 +1,4 @@
-package com.example.ejemplonavegacioncompose.ui.componentes
+package com.example.gestfut_compose.ui.components
 
 import androidx.compose.ui.graphics.vector.ImageVector
 
